@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HalalGuard AI 🌙 Food Halal, Origin & Expiry Auditor</title>
+  <meta name="description" content="AI-powered food halal inspector, origin identifier, and expiry date auditor with live camera and image recognition. Instantly verify halal status, examine E-numbers, inspect ingredients, and check food safety.">
+  <meta name="keywords" content="Halal checker, Halal AI, Food expiry auditor, Product origin detector, E-numbers halal, Halal camera scanner, HalalGuard">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Ambient Decorative Background -->
+  <div class="bg-decoration" aria-hidden="true">
+    <div class="glow-circle glow-1"></div>
+    <div class="glow-circle glow-2"></div>
+    <div class="glow-circle glow-3"></div>
+  </div>
+
+  <!-- Header / Main Navigation -->
+  <header class="navbar">
+    <div class="container nav-content">
+      <div class="brand" role="banner">
+        <div class="brand-icon">
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            <path d="M19 3v4"></path>
+            <path d="M21 5h-4"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">HalalGuard <span class="brand-highlight">AI</span></span>
+          <span class="brand-tagline">AI Halal, Asal Produk & Komposisi Inspector</span>
+        </div>
+      </div>
+      
+      <div class="nav-actions">
+        <!-- Theme Toggle Button (Dark / Light) -->
+        <button id="btn-theme-toggle" class="btn-icon theme-toggle-btn" title="Ganti Tema (Dark / Light Mode)" aria-label="Toggle Theme">
+          <svg class="theme-icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <svg class="theme-icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+
+        <!-- History Drawer Button -->
+        <button id="btn-open-history" class="btn-secondary" title="Lihat Riwayat Pemeriksaan">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+            <path d="M12 7v5l4 2"></path>
+          </svg>
+          <span class="nav-btn-text">Riwayat (<span id="history-count">0</span>)</span>
+        </button>
+        
+        <!-- Settings Modal Button -->
+        <button id="btn-open-settings" class="btn-icon" title="Pengaturan API & Model" aria-label="Settings">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container main-content">
+    
+    <!-- Hero Section (Minimalist & Clean) -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        <span>Gemini AI Vision • Deteksi Asal Produk & Komposisi Presisi</span>
+      </div>
+      <h1 class="hero-title">Audit Kehalalan, Asal Produk & Kedaluwarsa</h1>
+      <p class="hero-subtitle">
+        Pindai kemasan makanan via <strong>Kamera AI</strong> atau masukkan data produk untuk mengenali <strong>asal negara/pabrikan</strong>, mendeteksi <strong>seluruh komposisi & kode E-number</strong>, serta mengecek status Halal dan kedaluwarsa secara instan.
+      </p>
+
+      <!-- Input Mode Switcher Tabs (Minimalist Segmented Control) -->
+      <div class="mode-tabs-container">
+        <div class="mode-tabs" role="tablist">
+          <button id="tab-btn-camera" class="mode-tab active" role="tab" aria-selected="true" aria-controls="panel-camera">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+              <circle cx="12" cy="13" r="3"></circle>
+            </svg>
+            <span>Kamera & Foto AI</span>
+            <span class="tab-highlight-tag">Fitur AI</span>
+          </button>
+          
+          <button id="tab-btn-manual" class="mode-tab" role="tab" aria-selected="false" aria-controls="panel-manual">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span>Input Teks Manual</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Sample Presets (Minimalist Chips) -->
+    <section class="samples-bar" aria-label="Contoh Cepat">
+      <div class="samples-bar-inner">
+        <span class="samples-bar-label">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          Uji Cepat:
+        </span>
+        <div class="samples-chips-group">
+          <button type="button" class="sample-chip sample-chip-halal" id="sample-chip-1" title="Klik untuk menguji Mie Instan Indonesia (Halal)">
+            <span class="chip-status-dot dot-halal"></span>
+            <span class="chip-name">🇮🇩 Mie Sedaap (Wings Food)</span>
+            <span class="chip-badge">Halal & Aman</span>
+          </button>
+
+          <button type="button" class="sample-chip sample-chip-haram" id="sample-chip-2" title="Klik untuk menguji Ramen Jepang (Non-Halal / Lard)">
+            <span class="chip-status-dot dot-haram"></span>
+            <span class="chip-name">🇯🇵 Ichiraku Tonkotsu Ramen</span>
+            <span class="chip-badge">Haram / Pork Lard</span>
+          </button>
+
+          <button type="button" class="sample-chip sample-chip-syubhah" id="sample-chip-3" title="Klik untuk menguji Permen Impor Jerman (E120/Gelatin)">
+            <span class="chip-status-dot dot-syubhah"></span>
+            <span class="chip-name">🇩🇪 Sweet Fruits Gummy Candy</span>
+            <span class="chip-badge">Syubhah / E120</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- App Layout: Left Controller / Right Results Dashboard -->
+    <div class="app-layout">
+      
+      <!-- Left Panel: Camera Scanner & Input Form Card -->
+      <div class="left-panel">
+        
+        <!-- Tab Panel 1: Camera & AI Vision Scanner -->
+        <section class="action-card tab-panel" id="panel-camera" role="tabpanel">
+          <div class="card-header">
+            <div class="card-icon camera-icon-bg">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                <circle cx="12" cy="13" r="3"></circle>
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Pindai Kamera AI</h2>
+              <p class="card-subtitle">Arahkan kamera tepat ke tabel komposisi / ingredients kemasan.</p>
+            </div>
+          </div>
+
+          <!-- Camera Viewport Area -->
+          <div class="camera-viewport-wrapper" id="camera-viewport-wrapper">
+            
+            <!-- Live Video Stream -->
+            <div class="camera-feed-container" id="camera-feed-container">
+              <video id="camera-video" playsinline autoplay muted class="camera-video"></video>
+              <canvas id="camera-canvas" class="hidden"></canvas>
+              
+              <!-- Viewfinder Overlays with Target Grid Box -->
+              <div class="viewfinder-overlay" id="viewfinder-overlay">
+                <div class="viewfinder-corners"></div>
+                <div class="viewfinder-target-box">
+                  <span class="target-box-tag">FOKUS TABEL KOMPOSISI</span>
+                </div>
+                <div class="viewfinder-scanline" id="viewfinder-scanline"></div>
+                <div class="viewfinder-instruction">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 3h6v6"></path>
+                    <path d="M9 21H3v-6"></path>
+                    <path d="M21 9v6"></path>
+                    <path d="M3 15V9"></path>
+                  </svg>
+                  <span>Posisikan tabel KOMPOSISI & nama produk agar terbaca jelas</span>
+                </div>
+              </div>
+
+              <!-- Camera Offline / Placeholder State -->
+              <div class="camera-placeholder" id="camera-placeholder">
+                <div class="cam-icon-circle">
+                  <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                    <circle cx="12" cy="13" r="3"></circle>
+                  </svg>
+                </div>
+                <h4>Kamera Belum Aktif</h4>
+                <p>Klik tombol <strong>"Aktifkan Kamera"</strong> di bawah, unggah foto kemasan, atau coba sampel foto label.</p>
+              </div>
+
+              <!-- Captured Image Preview (When photo is taken or uploaded) -->
+              <div class="captured-preview-container hidden" id="captured-preview-container">
+                <img id="captured-image" alt="Captured food packaging preview" class="captured-image">
+                <div class="captured-overlay">
+                  <span class="captured-tag">📸 Foto Kemasan Terpilih</span>
+                  <button type="button" id="btn-retake-photo" class="btn-retake" title="Ambil foto ulang">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                    Ulangi Foto
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Camera Controls Bar -->
+            <div class="camera-controls-bar">
+              <button type="button" id="btn-toggle-camera" class="btn-cam-control btn-start-cam">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 7l-7 5 7 5V7z"></path>
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                <span id="cam-toggle-text">Aktifkan Kamera</span>
+              </button>
+
+              <button type="button" id="btn-switch-camera" class="btn-cam-control btn-icon-only hidden" title="Ganti Kamera Depan/Belakang">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 10c0-4.418-3.582-8-8-8s-8 3.582-8 8c0 2.21 0.895 4.21 2.343 5.657L4 20h4.343"></path>
+                  <path d="M4 14c0 4.418 3.582 8 8 8s8-3.582 8-8c0-2.21-0.895-4.21-2.343-5.657L20 4h-4.343"></path>
+                </svg>
+              </button>
+
+              <button type="button" id="btn-toggle-torch" class="btn-cam-control btn-icon-only hidden" title="Senter / Flashlight">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 6L6 18"></path>
+                  <path d="m13 2-2 2.5V8l3 3-1.5 8.5 7.5-7.5L16 8h3.5L22 6Z"></path>
+                </svg>
+              </button>
+
+              <button type="button" id="btn-capture-scan" class="btn-capture-ai hidden">
+                <span class="capture-inner-circle"></span>
+                <span>Ambil & Analisis Komposisi</span>
+              </button>
+            </div>
+
+            <!-- Upload Photo Dropzone Area -->
+            <div class="upload-dropzone" id="upload-dropzone">
+              <input type="file" id="file-input" accept="image/*" class="file-input-hidden">
+              <div class="dropzone-content" id="dropzone-trigger">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" class="upload-icon">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <div class="dropzone-text">
+                  <span class="dropzone-title">Unggah Foto Kemasan / Tabel Komposisi</span>
+                  <span class="dropzone-sub">AI membaca nama produk, pabrik asal, kata demi kata komposisi & logo halal</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Packaging Photo Samples with 3 Clear Labels -->
+            <div class="sample-images-row">
+              <span class="sample-img-label">Uji Foto Kemasan Sampel Asli:</span>
+              <div class="sample-img-buttons">
+                <button type="button" class="btn-sample-img" id="btn-sample-img-1" title="Uji Foto Label Mie Sedaap Halal">
+                  <span>🍜 Foto 1: Mie Sedaap (Halal)</span>
+                </button>
+                <button type="button" class="btn-sample-img" id="btn-sample-img-2" title="Uji Foto Label Tonkotsu Ramen">
+                  <span>🇯🇵 Foto 2: Tonkotsu Ramen (Pork Lard)</span>
+                </button>
+                <button type="button" class="btn-sample-img" id="btn-sample-img-3" title="Uji Foto Label Permen Gummy">
+                  <span>🍬 Foto 3: Gummy Candy (Gelatin & E120)</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Tab Panel 2: Manual Input Form Card -->
+        <section class="action-card tab-panel hidden" id="panel-manual" role="tabpanel">
+          <div class="card-header">
+            <div class="card-icon form-icon-bg">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Input Data Manual</h2>
+              <p class="card-subtitle">Ketikkan nama produk, produsen, dan bahan komposisi untuk audit.</p>
+            </div>
+          </div>
+
+          <!-- Alert Box for Validation -->
+          <div id="form-alert" class="alert-box alert-hidden" role="alert">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-message" id="alert-message">Mohon lengkapi kolom yang wajib diisi.</span>
+          </div>
+
+          <form id="inspector-form" novalidate>
+            
+            <!-- Field 1: Product Name -->
+            <div class="form-group">
+              <label for="product-name" class="form-label">
+                <span>Nama Produk Makanan</span>
+                <span class="required-star">*</span>
+              </label>
+              <div class="input-wrapper">
+                <svg class="field-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                  <path d="M3 6h18"></path>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                <input 
+                  type="text" 
+                  id="product-name" 
+                  name="productName" 
+                  class="form-control" 
+                  placeholder="Contoh: Indomie Goreng, Haribo Gummy, Tonkotsu Ramen"
+                  required
+                >
+              </div>
+            </div>
+
+            <!-- Field 2: Ingredients Composition -->
+            <div class="form-group">
+              <div class="label-with-helper">
+                <label for="ingredients-text" class="form-label">
+                  <span>Komposisi / Bahan-Bahan</span>
+                  <span class="required-star">*</span>
+                </label>
+                <span class="helper-hint">Sertakan kode E-number (misal: E120, E471)</span>
+              </div>
+              <div class="textarea-wrapper">
+                <textarea 
+                  id="ingredients-text" 
+                  name="ingredients" 
+                  rows="4" 
+                  class="form-control textarea-control" 
+                  placeholder="Daftar komposisi: Tepung terigu, Minyak nabati, Pengemulsi E471, Gelatin, Perisa, Pewarna Carmine E120..."
+                  required
+                ></textarea>
+              </div>
+              <div class="tags-quick-insert">
+                <span class="insert-label">Tambah Cepat:</span>
+                <button type="button" class="tag-btn" data-insert="E120 (Pewarna Karmin)">+ E120 (Karmin)</button>
+                <button type="button" class="tag-btn" data-insert="E471 (Pengemulsi Nabati/Hewani)">+ E471 (Emulsifier)</button>
+                <button type="button" class="tag-btn" data-insert="Gelatin (sumber hewani)">+ Gelatin</button>
+                <button type="button" class="tag-btn" data-insert="Monosodium Glutamat (MSG Halal)">+ MSG</button>
+              </div>
+            </div>
+
+            <!-- Two-column row: Expiry Date & Halal Certificate -->
+            <div class="form-row">
+              
+              <!-- Field 3: Expiry Date -->
+              <div class="form-group col-half">
+                <label for="expiry-date" class="form-label">
+                  <span>Tanggal Kedaluwarsa (Exp)</span>
+                  <span class="required-star">*</span>
+                </label>
+                <div class="input-wrapper">
+                  <svg class="field-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <input 
+                    type="date" 
+                    id="expiry-date" 
+                    name="expiryDate" 
+                    class="form-control" 
+                    required
+                  >
+                </div>
+                <div class="quick-dates">
+                  <button type="button" class="date-quick-btn" id="btn-date-expired">Expired</button>
+                  <button type="button" class="date-quick-btn" id="btn-date-soon">+14 Hari</button>
+                  <button type="button" class="date-quick-btn" id="btn-date-safe">+1 Tahun</button>
+                </div>
+              </div>
+
+              <!-- Field 4: Halal Label / Certificate Info -->
+              <div class="form-group col-half">
+                <label for="halal-label" class="form-label">
+                  <span>Sertifikat / Label Halal</span>
+                </label>
+                <div class="select-wrapper">
+                  <svg class="field-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                  <select id="halal-label" name="halalLabel" class="form-control select-control">
+                    <option value="Halal Certified (BPJPH / MUI / JAKIM / IFANCA / Diakui)">Tersertifikasi Halal (BPJPH/MUI/JAKIM/dll.)</option>
+                    <option value="No Halal Label">Tanpa Label Halal</option>
+                    <option value="Unknown / Not Stated" selected>Belum Diketahui / Tidak Tertera</option>
+                  </select>
+                  <svg class="select-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m6 9 6 6 6-6"></path>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Form Action Buttons -->
+            <div class="form-actions">
+              <button type="submit" id="btn-submit" class="btn-primary">
+                <span class="btn-icon-wrapper">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+                <span>Analisis Kehalalan, Asal & Komposisi</span>
+              </button>
+              <button type="button" id="btn-clear" class="btn-secondary" title="Bersihkan kolom input">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18"></path>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                </svg>
+                <span>Reset</span>
+              </button>
+            </div>
+
+          </form>
+        </section>
+
+      </div>
+
+      <!-- Right Panel: Results & Audit Dashboard -->
+      <section class="results-container" id="results-section">
+        
+        <!-- State 1: Default Empty / Placeholder View -->
+        <div id="state-empty" class="state-card state-empty-view">
+          <div class="empty-graphic">
+            <div class="icon-ring">
+              <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+            </div>
+          </div>
+          <h3 class="empty-title">Siap Memeriksa Kehalalan Makanan</h3>
+          <p class="empty-text">Gunakan <strong>Kamera AI</strong> untuk memindai kemasan secara langsung atau masukkan komposisi produk untuk mendapatkan laporan audit kehalalan, asal negara/pabrikan, dan tanggal kedaluwarsa.</p>
+          
+          <div class="empty-features">
+            <div class="feat-pill">
+              <span class="feat-icon">🌐</span>
+              <div>
+                <strong>Deteksi Asal Produk</strong>
+                <span>Negara pembuat & pabrikan resmi</span>
+              </div>
+            </div>
+            <div class="feat-pill">
+              <span class="feat-icon">🔬</span>
+              <div>
+                <strong>Komposisi Presisi</strong>
+                <span>Ekstraksi detail bahan & E-code</span>
+              </div>
+            </div>
+            <div class="feat-pill">
+              <span class="feat-icon">🥩</span>
+              <div>
+                <strong>Pencegahan Bahan Haram</strong>
+                <span>Deteksi lard, babi & khamr</span>
+              </div>
+            </div>
+            <div class="feat-pill">
+              <span class="feat-icon">⏳</span>
+              <div>
+                <strong>Audit Kedaluwarsa</strong>
+                <span>Evaluasi sisa masa simpan</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- State 2: Loading State -->
+        <div id="state-loading" class="state-card state-loading-view hidden">
+          <div class="loading-scanner">
+            <div class="scanner-circle"></div>
+            <div class="scanner-inner">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" class="spin-slow">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <h3 class="loading-title">HalalGuard AI Sedang Menganalisis...</h3>
+          <p class="loading-subtitle">Membaca teks kemasan kata demi kata, mendeteksi negara asal & pabrikan, membedah komposisi bahan, serta mengaudit fatwa halal.</p>
+          
+          <div class="bouncing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="loading-steps" id="loading-step-text">
+            Membaca dan mentranskripsi tabel komposisi dari foto...
+          </div>
+        </div>
+
+        <!-- State 3: Analysis Results Output -->
+        <div id="state-results" class="results-view hidden">
+          
+          <!-- Quick Toolbar -->
+          <div class="results-toolbar">
+            <div class="product-header-info">
+              <span class="audited-tag">Hasil Audit AI</span>
+              <h2 id="res-product-name" class="res-title">Nama Produk</h2>
+              <span id="res-timestamp" class="res-time">Baru saja</span>
+            </div>
+            <div class="toolbar-actions">
+              <button id="btn-copy-report" class="btn-tool" title="Salin Ringkasan Laporan">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg>
+                <span>Salin Ringkasan</span>
+              </button>
+              <button id="btn-print-report" class="btn-tool" title="Cetak / Simpan PDF">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect width="12" height="8" x="6" y="14"></rect>
+                </svg>
+                <span>Cetak</span>
+              </button>
+              <button id="btn-new-scan" class="btn-tool btn-tool-primary" title="Mulai Pemeriksaan Baru">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 5v14"></path>
+                  <path d="M5 12h14"></path>
+                </svg>
+                <span>Pindai Baru</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Section 1: Overall Status Banner -->
+          <div id="overall-status-banner" class="status-banner banner-halal">
+            <div class="status-banner-icon" id="banner-icon-container">
+              <!-- Dynamically populated with SVG icon -->
+            </div>
+            <div class="status-banner-body">
+              <div class="status-badge-row">
+                <span id="banner-verdict-badge" class="badge-verdict">HALAL & AMAN</span>
+                <span id="banner-safety-badge" class="badge-subverdict">LAYAK KONSUMSI</span>
+                <span id="banner-origin-pill" class="badge-origin-pill">🇮🇩 Asal Indonesia</span>
+              </div>
+              <h3 id="banner-headline" class="banner-title">Produk 100% Halal & Segar</h3>
+              <p id="banner-summary" class="banner-desc">Tidak ditemukan zat haram, lemak babi, maupun tanggal kedaluwarsa yang terlewati.</p>
+            </div>
+            
+            <!-- Scanned packaging thumbnail (if available) -->
+            <div id="banner-thumbnail-container" class="banner-thumbnail-container hidden">
+              <img id="banner-thumbnail-img" src="" alt="Thumbnail Kemasan" class="banner-thumbnail-img">
+            </div>
+          </div>
+
+          <!-- Section 2: Origin & Manufacturer Identification Card -->
+          <div class="result-card origin-card" id="origin-result-card">
+            <div class="card-mini-head">
+              <div class="mini-icon origin-icon-bg">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                  <path d="M2 12h20"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="card-mini-title">Identifikasi Asal Produk & Produsen</h4>
+                <span class="card-mini-sub">Negara pembuat, pabrikan manufaktur, dan perizinan edar</span>
+              </div>
+            </div>
+
+            <div class="origin-content-grid">
+              <div class="origin-info-item">
+                <span class="origin-label">Negara Asal / Asal Wilayah:</span>
+                <div class="origin-val-box" id="res-origin-country">
+                  <span class="origin-flag-icon">🌐</span>
+                  <strong>Indonesia</strong>
+                </div>
+              </div>
+
+              <div class="origin-info-item">
+                <span class="origin-label">Produsen / Pabrik / Brand:</span>
+                <div class="origin-val-box" id="res-origin-manufacturer">
+                  <strong>PT Wings Surya / Mie Sedaap</strong>
+                </div>
+              </div>
+
+              <div class="origin-info-item">
+                <span class="origin-label">Izin Edar / Registrasi:</span>
+                <div class="origin-val-box" id="res-origin-registration">
+                  <strong>BPOM RI MD / Terverifikasi</strong>
+                </div>
+              </div>
+
+              <div class="origin-info-item">
+                <span class="origin-label">Kategori Produk:</span>
+                <div class="origin-val-box" id="res-origin-category">
+                  <strong>Makanan Olahan / Mie Instan</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="origin-implication-box" id="origin-implication-box">
+              <span class="origin-imp-icon">ℹ️</span>
+              <p id="res-origin-implication" class="origin-imp-text">
+                Produk lokal Indonesia bersertifikat BPJPH/MUI mematuhi UU JPH dan standar bahan halal nasional.
+              </p>
+            </div>
+          </div>
+
+          <!-- Section 3: OCR Extracted Raw Ingredients Box (Kata Demi Kata dari Foto) -->
+          <div class="result-card ocr-card" id="ocr-extracted-card">
+            <div class="card-mini-head">
+              <div class="mini-icon ocr-icon-bg">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 7V4h16v3"></path>
+                  <path d="M9 20h6"></path>
+                  <path d="M12 4v16"></path>
+                </svg>
+              </div>
+              <div class="ocr-head-text">
+                <h4 class="card-mini-title">Teks Komposisi Asli yang Terbaca dari Foto (OCR Kemasan)</h4>
+                <span class="card-mini-sub">Transkripsi langsung kata demi kata persis dari foto kemasan</span>
+              </div>
+            </div>
+            
+            <div class="ocr-body">
+              <div class="ocr-raw-box" id="ocr-raw-box">
+                <span class="ocr-quote-mark">“</span>
+                <p id="res-ocr-raw-text" class="ocr-text-content">Belum ada pemindaian foto.</p>
+              </div>
+              <div class="ocr-actions-row">
+                <span class="ocr-badge-confidence" id="ocr-badge-confidence">🔍 Terdeteksi Lengkap</span>
+                <button type="button" id="btn-copy-ocr-text" class="btn-tool" title="Salin teks komposisi asli">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                  <span>Salin Teks Asli</span>
+                </button>
+                <button type="button" id="btn-edit-in-form" class="btn-tool btn-tool-primary" title="Edit teks komposisi ini di form input manual">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  <span>Koreksi / Edit di Form</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Two Column Results Grid: Expiry Audit & Halal Certificate Assessment -->
+          <div class="results-grid-two">
+            
+            <!-- Expiry Assessment Card -->
+            <div class="result-card expiry-card" id="expiry-result-card">
+              <div class="card-mini-head">
+                <div class="mini-icon expiry-icon-bg">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="card-mini-title">Audit Tanggal Kedaluwarsa</h4>
+                  <span class="card-mini-sub">Pemeriksaan masa simpan & kesegaran</span>
+                </div>
+              </div>
+              
+              <div class="expiry-content">
+                <div class="expiry-highlight-box" id="expiry-highlight-box">
+                  <div class="expiry-badge" id="expiry-status-badge">
+                    <span class="expiry-dot"></span>
+                    <span id="expiry-status-text">🟢 AMAN</span>
+                  </div>
+                  <div class="expiry-date-display">
+                    <span class="date-label">Tanggal Kedaluwarsa:</span>
+                    <span class="date-val" id="expiry-date-val">2027-12-31</span>
+                  </div>
+                </div>
+                <div class="expiry-countdown-bar">
+                  <div class="expiry-days-text" id="expiry-days-text">
+                    <strong>450+ hari</strong> tersisa hingga kedaluwarsa.
+                  </div>
+                  <p class="expiry-advice-text" id="expiry-advice-text">
+                    Produk berada dalam rentang konsumsi yang aman. Pastikan segel kemasan rapat.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Halal Certificate Card -->
+            <div class="result-card cert-card">
+              <div class="card-mini-head">
+                <div class="mini-icon cert-icon-bg">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <path d="m9 12 2 2 4-4"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="card-mini-title">Audit Sertifikasi Halal</h4>
+                  <span class="card-mini-sub">Keabsahan & otoritas penerbit</span>
+                </div>
+              </div>
+              
+              <div class="cert-content">
+                <div class="cert-status-row">
+                  <span class="cert-badge" id="cert-status-badge">Tersertifikasi BPJPH / MUI</span>
+                </div>
+                <p class="cert-details" id="cert-details-text">
+                  Produk dinyatakan memiliki sertifikasi Halal resmi dari lembaga terakreditasi.
+                </p>
+                <div class="cert-tip-box" id="cert-tip-box">
+                  <span class="tip-icon">💡</span>
+                  <span class="tip-text" id="cert-tip-text">Periksa logo halal fisik pada kemasan dan nomor registrasi resmi.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Section 4: Detailed Halal & Ingredients Verdict -->
+          <div class="result-card ingredients-card">
+            <div class="card-mini-head">
+              <div class="mini-icon ing-icon-bg">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+                  <path d="m8.5 8.5 7 7"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="card-mini-title">Rincian Komposisi & Kode E-Number</h4>
+                <span class="card-mini-sub">Deteksi presisi asal bahan, fungsi pangan & status hukum fikih</span>
+              </div>
+            </div>
+
+            <!-- Flagged / Critical Items Alert (if any) -->
+            <div id="flagged-items-container" class="flagged-box hidden">
+              <div class="flagged-header">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span class="flagged-title">Bahan Kritis / Haram Terdeteksi:</span>
+              </div>
+              <ul id="flagged-items-list" class="flagged-list">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+
+            <!-- Ingredients Table -->
+            <div class="ingredients-list-wrapper">
+              <div class="table-responsive">
+                <table class="ingredients-table" id="ingredients-table">
+                  <thead>
+                    <tr>
+                      <th>Bahan / Komposisi</th>
+                      <th>Kode E-Number</th>
+                      <th>Asal Sumber Bahan</th>
+                      <th>Status Fikih</th>
+                      <th>Catatan Hukum & Titik Kritis</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ingredients-tbody">
+                    <!-- Dynamic rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 5: Actionable Summary & Storage Tips -->
+          <div class="result-card advice-card">
+            <div class="card-mini-head">
+              <div class="mini-icon advice-icon-bg">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="card-mini-title">Panduan Konsumsi & Penyimpanan</h4>
+                <span class="card-mini-sub">Petunjuk praktis untuk konsumen Muslim</span>
+              </div>
+            </div>
+
+            <div class="advice-grid">
+              <div class="advice-box consumption-box">
+                <div class="advice-box-title">
+                  <span class="box-icon">🍽️</span>
+                  <span>Panduan Konsumsi</span>
+                </div>
+                <p id="advice-consumption" class="advice-text">
+                  Aman dikonsumsi oleh umat Islam. Memenuhi standar kehalalan syariah.
+                </p>
+              </div>
+
+              <div class="advice-box storage-box">
+                <div class="advice-box-title">
+                  <span class="box-icon">❄️</span>
+                  <span>Tips Penyimpanan</span>
+                </div>
+                <p id="advice-storage" class="advice-text">
+                  Simpan di tempat kering dan sejuk, hindari paparan sinar matahari langsung.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Sidebar History Drawer -->
+  <aside id="history-drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-overlay" id="history-overlay"></div>
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <h3>Riwayat Pemeriksaan</h3>
+        </div>
+        <button id="btn-close-history" class="btn-close" title="Tutup">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="drawer-content">
+        <div class="drawer-actions-bar">
+          <span id="history-total-label">0 item tersimpan</span>
+          <button id="btn-clear-history" class="btn-danger-link">Hapus Semua</button>
+        </div>
+
+        <div id="history-list" class="history-list">
+          <!-- Populated from localStorage -->
+          <div class="history-empty">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <p>Belum ada riwayat pemeriksaan.</p>
+            <span>Produk yang diaudit akan otomatis muncul di sini.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Settings / API Key Modal -->
+  <div id="settings-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <h3>Konfigurasi Gemini AI</h3>
+        </div>
+        <button id="btn-close-settings" class="btn-close">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-desc">
+          HalalGuard AI menggunakan <strong>Google Gemini Multimodal AI</strong> untuk mengenali teks kemasan, mendeteksi negara asal produk & pabrik pembuat, serta membedah komposisi secara presisi tinggi.
+        </p>
+
+        <div class="form-group">
+          <label for="input-api-key" class="form-label">Gemini API Key</label>
+          <div class="input-wrapper">
+            <input 
+              type="password" 
+              id="input-api-key" 
+              class="form-control" 
+              placeholder="Masukkan Gemini API key kustom jika ada"
+            >
+            <button type="button" id="btn-toggle-key-visibility" class="btn-input-action" title="Tampilkan/Sembunyikan">👁️</button>
+          </div>
+          <span class="helper-hint">API Key tersimpan secara aman di browser lokal Anda.</span>
+        </div>
+
+        <div class="api-status-box">
+          <div class="api-status-indicator active"></div>
+          <div>
+            <strong>Model:</strong> gemini-2.5-flash / multimodal vision<br>
+            <strong>Status:</strong> Siap untuk pemindaian kemasan, asal produk & komposisi
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-reset-key" class="btn-secondary">Reset ke Default</button>
+        <button id="btn-save-key" class="btn-primary">Simpan Perubahan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <span>HalalGuard AI 🌙</span>
+        <span class="footer-copy">© 2026 HalalGuard AI. Membantu kepastian kehalalan, asal produk, dan keamanan pangan umat Muslim.</span>
+      </div>
+      <div class="footer-disclaimer">
+        <span>⚠️ Catatan: Analisis AI didasarkan pada standar fatwa syariat, identifikasi asal manufaktur, dan pembacaan label kemasan. Tetap utamakan verifikasi logo halal resmi dan otoritas sertifikasi terkait (BPJPH / MUI).</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
